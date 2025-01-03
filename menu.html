@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal and Vertical Menus</title>
+    <style>
+        /* Basic styles for the menus */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container for both menus */
+        .menu-container {
+            display: flex;
+            flex-direction: row; /* Arrange menus side by side */
+            gap: 190px;
+        }
+
+        /* Vertical Menu */
+        .vertical-menu {
+            list-style-type: none;
+            padding: 0;
+            width: 200px; /* Set the width of the vertical menu */
+            margin: 20px;
+        }
+
+        .vertical-menu li {
+            margin-bottom: 10px;
+        }
+
+        .vertical-menu a {
+            text-decoration: none;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            display: block;
+        }
+
+        .submenu {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 200px; /* Positioning submenu to the right of the parent menu */
+            background-color: #444;
+            margin-top: -10px;
+            list-style-type: none;
+            padding: 0;
+            width: 180px;
+        }
+
+        .vertical-menu li:hover .submenu {
+            display: block;
+        }
+
+        .submenu li {
+            margin-bottom: 5px;
+        }
+
+        /* Horizontal Menu */
+        .horizontal-menu {
+            list-style-type: none;
+            padding: 0;
+            display: flex; /* Use flexbox for horizontal layout */
+            margin: 20px;
+        }
+
+        .horizontal-menu li {
+            margin-right: 15px;
+            position: relative;
+        }
+
+        .horizontal-menu a {
+            text-decoration: none;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            display: block;
+        }
+
+        .horizontal-menu li:hover > a {
+            background-color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="menu-container">
+    <!-- Vertical Menu -->
+    <nav>
+        <ul class="vertical-menu" id="vertical-menu"></ul>
+    </nav>
+
+    <!-- Horizontal Menu -->
+    <nav>
+        <ul class="horizontal-menu" id="horizontal-menu"></ul>
+    </nav>
+</div>
+
+<script>
+    // Static menu structure
+    const menuItems = [
+        {
+            name: 'Home',
+            url: 'home.html',
+            submenu: []
+        },
+        {
+            name: 'About',
+            url: 'about.html',
+            submenu: [
+                {
+                    name: 'Team',
+                    url: 'team.html',
+                    submenu: []
+                },
+                {
+                    name: 'History',
+                    url: 'history.html',
+                    submenu: []
+                }
+            ]
+        },
+        {
+            name: 'Services',
+            url: 'services.html',
+            submenu: [
+                {
+                    name: 'Web Development',
+                    url: 'web-dev.html',
+                    submenu: []
+                },
+                {
+                    name: 'App Development',
+                    url: 'app-dev.html',
+                    submenu: []
+                }
+            ]
+        },
+        {
+            name: 'Contact',
+            url: 'contact.html',
+            submenu: []
+        }
+    ];
+
+    // Function to generate the menu HTML
+    function generateMenu(menuItems, parentElement, isHorizontal = false) {
+        const ul = document.createElement('ul');
+        ul.classList.add(isHorizontal ? 'horizontal-menu' : 'vertical-menu');
+
+        menuItems.forEach(item => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = item.url;
+            a.textContent = item.name;
+            li.appendChild(a);
+
+            // If the item has a submenu, create it recursively
+            if (item.submenu && item.submenu.length > 0) {
+                const submenu = generateMenu(item.submenu, li, false);
+                submenu.classList.add('submenu');
+                li.appendChild(submenu);
+            }
+
+            ul.appendChild(li);
+        });
+
+        parentElement.appendChild(ul);
+        return ul;
+    }
+
+    // Create the vertical menu
+    const verticalMenu = document.getElementById('vertical-menu');
+    generateMenu(menuItems, verticalMenu, false);
+
+    // Create the horizontal menu
+    const horizontalMenu = document.getElementById('horizontal-menu');
+    generateMenu(menuItems, horizontalMenu, true);
+
+</script>
+</body>
+</html>
